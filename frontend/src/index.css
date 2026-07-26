@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Reset ──────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+body {
+  background-color: #0D0D14;
+  color: #F0F0FF;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* Prevent horizontal scroll on small screens */
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: #13131F; }
+::-webkit-scrollbar-thumb { background: #2A2A3D; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #7C3AED; }
+
+/* ── Inputs ─────────────────────────────────────────────────── */
+input::placeholder { color: #5A5A7A; }
+input:focus        { outline: none; }
+button             { cursor: pointer; }
+
+/* ── Responsive CSS variables ───────────────────────────────── */
+/* These change automatically based on screen width */
+:root {
+  --sidebar-width:    80px;
+  --page-padding:     32px;
+  --card-padding:     24px 28px;
+  --banner-padding:   32px 36px;
+  --font-h1:          26px;
+  --font-h2:          14px;
+  --stat-size:        26px;
+}
+
+/* Medium laptops — 1024px and below */
+@media (max-width: 1024px) {
+  :root {
+    --page-padding:   24px;
+    --banner-padding: 24px;
+    --font-h1:        22px;
+    --stat-size:      22px;
+  }
+}
+
+/* Small laptops and tablets — 768px and below */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width:  60px;
+    --page-padding:   16px;
+    --card-padding:   16px 18px;
+    --banner-padding: 20px;
+    --font-h1:        20px;
+    --font-h2:        13px;
+    --stat-size:      20px;
+  }
+}
+
+/* Mobile — 480px and below */
+@media (max-width: 480px) {
+  :root {
+    --sidebar-width:  0px;
+    --page-padding:   12px;
+  }
+}
+
+/* ── Utility classes we use across all pages ────────────────── */
+
+/* The outer page wrapper — every page uses this */
+.page-wrapper {
+  padding: var(--page-padding);
+  width: 100%;
+    /* never wider than 1200px even on huge monitors */
+}
+
+/* A card / panel */
+.forge-card {
+  background-color: #13131F;
+  border: 1px solid #2A2A3D;
+  border-radius: 20px;
+  padding: var(--card-padding);
+  margin-bottom: 16px;
+}
+
+/* Section header inside a card */
+.forge-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.forge-section-title {
+  font-size: var(--font-h2);
+  font-weight: 600;
+  color: #F0F0FF;
+}
+
+/* Stats row — wraps on small screens */
+.stats-row {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;  /* wraps to next line on narrow screens */
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 60px;
+}
+
+.stat-value {
+  font-size: var(--stat-size);
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #8B8BB3;
+}
+
+/* Creation zone grid — auto-fills columns, minimum 140px each */
+.creation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+/* Responsive 2-column grid */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* ── Custom range (slider) styling ─────────────────────────── */
+/* Makes all sliders match the FORGE dark purple theme */
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  background: #2A2A3D;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* The draggable thumb — Chrome/Safari */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #7C3AED;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(124, 58, 237, 0.6);
+  transition: box-shadow 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.9);
+}
+
+/* The draggable thumb — Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #7C3AED;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 6px rgba(124, 58, 237, 0.6);
+}
+
+/* ── Select dropdown styling ────────────────────────────────── */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235A5A7A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px !important;
+  cursor: pointer;
+}
+
+
+/* ── React Flow dark theme overrides ───────────────────────── */
+/* Override React Flow's default light theme to match FORGE */
+
+.react-flow {
+  background-color: #0D0D14;
+}
+.react-flow__background {
+  background-color: #0D0D14;
+}
+.react-flow__pane {
+  cursor: default;
+}
+.react-flow__controls {
+  background: #13131F;
+  border: 1px solid #2A2A3D;
+  border-radius: 8px;
+  box-shadow: none;
+}
+.react-flow__controls-button {
+  background: #13131F;
+  border-bottom: 1px solid #2A2A3D;
+  color: #8B8BB3;
+  fill: #8B8BB3;
+}
+.react-flow__controls-button:hover {
+  background: #1A1A2E;
+}
+.react-flow__controls-button svg {
+  fill: #8B8BB3;
+}
+.react-flow__minimap {
+  background: #13131F;
+  border: 1px solid #2A2A3D;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.react-flow__minimap-mask {
+  fill: rgba(124, 58, 237, 0.1);
+}
+.react-flow__edge-path {
+  stroke: #7C3AED;
+  stroke-width: 2;
+}
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #8B5CF6;
+}
+.react-flow__handle {
+  border: 2px solid #0D0D14;
+}
+.react-flow__connection-path {
+  stroke: #7C3AED;
+}
+.react-flow__attribution {
+  display: none;  /* hide the React Flow watermark */
+}
