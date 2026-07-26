@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import test_connection, engine, Base
+from contextlib import asynccontextmanager
+import asyncio
 
 # Import ALL models — create_all needs all of them
 from app.models.user           import User           # noqa: F401
@@ -22,11 +24,34 @@ from app.api.v1.workflow       import router as workflows_router
 from app.api.v1.executions      import router as executions_router
 from app.api.v1.discover        import router as discover_router
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Start background keep-alive task when app starts
+    task = asyncio.create_task(_keep_alive())
+    yield
+    task.cancel()
+
+async def _keep_alive():
+    """
+    Pings the database every 5 minutes.
+    Prevents Supabase from pausing due to inactivity on the free tier.
+    """
+    await asyncio.sleep(60)  # wait 1 min after startup
+    while True:
+        try:
+            from app.core.database import test_connection
+            ok, msg = test_connection()
+            print(f"[KeepAlive] DB ping: {msg}")
+        except Exception as e:
+            print(f"[KeepAlive] Ping failed: {e}")
+        await asyncio.sleep(300)  # ping every 5 minutes
+
 app = FastAPI(
-    title       = "FORGE API",
-    description = "Agentic AI Platform — built from scratch",
-    version     = "1.0.0",
-    docs_url    = "/docs",
+    title="FORGE API",
+    description="Agentic AI Platform — built from scratch",
+    version="1.0.0",
+    docs_url="/docs",
+    lifespan=lifespan,   # ← add this
 )
 
 app.add_middleware(
