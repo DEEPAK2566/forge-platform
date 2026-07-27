@@ -41,7 +41,7 @@ export default function MySpace() {
   const [loading,       setLoading]       = useState(true)
 
   useEffect(() => {
-    const fetchAll = async () => {
+    const fetchAll = async (retryCount = 0) => {
       try {
         const [agents, workflows, execs] = await Promise.all([
           agentService.count(),
@@ -52,7 +52,16 @@ export default function MySpace() {
         setWorkflowCount(workflows.count)
         setExecutions(execs)
       } catch (err) {
-        console.error('MySpace fetch error:', err)
+        // Backend may be waking up (Render free tier sleeps)
+        // Retry up to 3 times with 5 second gaps
+        if (retryCount < 3) {
+          console.log(`Backend waking up — retrying in 5s (attempt ${retryCount + 1}/3)`)
+          setTimeout(() => fetchAll(retryCount + 1), 5000)
+        } else {
+          console.error('Could not reach backend after 3 retries:', err)
+          setAgentCount(0)
+          setWorkflowCount(0)
+        }
       } finally {
         setLoading(false)
       }
